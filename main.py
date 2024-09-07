@@ -12,8 +12,6 @@ if __name__ == "__main__":
 
     parser.add_argument("--config", default="config.env", help="ENV source, defaults to config.env",
                         type=str)
-    parser.add_argument("-w", "--open_window", action="store_true",
-                        help="Will try to open new Chrome window with debug port automatically")
 
     subparsers = parser.add_subparsers(dest='command', help="Available commands")
 
