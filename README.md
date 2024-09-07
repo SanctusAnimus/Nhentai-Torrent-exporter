@@ -2,7 +2,7 @@
 Simple, crude, straightforward script to export your favourites gallery using QBitTorrent client (and it's WebAPI).
 Recommended to run under Python 3.10.
 
-> [!WARNING]
+> [!WARNING]  
 > I've only ran this on Windows 10, using QBitTorrent client version 4.4.3.1. I have no idea if / how it will work on any other platform. You're welcome to test though.
 
 ## Initial setup
@@ -27,10 +27,19 @@ Exporter assumes you have either `admin`:`adminadmin` credentials or you have `B
     I'm not exactly sure what are the rate limits with proper cookies set, values provided by default are conservative - tested it myself and exported 1400 entries.  
     For bigger galleries you might want to try reducing them a bit - floats are supported here (say, 0.5).
     
-    To get csrftoken, sessionid and cf clearance , first login to your nhentai account in web browser, then:  
+    To get csrftoken, sessionid and cf_clearance, first login to your nhentai account in web browser, then:  
     (Chrome) ⋮ — More tools — Developer tools — Application — Storage — Cookies — https://nhentai.net  
     (Firefox) ☰ — Web Developer — Web Developer Tools — Storage — Cookies — https://nhentai.net  
-    User Agent should be in the same tab as well. Please make sure to copy them properly, as well as use same IP when using exporter - otherwise you might trigger cloudflare errors.
+
+    > [!IMPORTANT]  
+    > `cf_clearance` is only set if you've passed captcha during your session - which might not be the case for you all the time.
+    > If you don't see it in the Storage, erase the line containing `CF_CLEARANCE` from config. 
+    > It being unset however might cause an error at some point, to which you'll need to switch back to your browser and reload the page to trigger captcha there, pass it and fetch clearance token in the same way described above
+
+    To get user agent, navigate into `Network`, find the very first request, click, scroll down to `Request Headers`:  
+    ![img_1.png](img_1.png)
+
+    You can also find your cookies there.
 
 3. (Optional, but preferred) Create python virtual environment from CMD via
     ```
