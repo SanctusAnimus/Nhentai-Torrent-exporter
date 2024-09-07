@@ -1,0 +1,5 @@
+*.env
+.venv
+fav_export
+fav_by_author.txt
+fav_ids.txt
