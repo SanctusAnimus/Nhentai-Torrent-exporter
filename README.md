@@ -6,7 +6,9 @@ Recommended to run under Python 3.10.
 > I've only ran this on Windows 10, using QBitTorrent client version 4.4.3.1. I have no idea if / how it will work on any other platform. You're welcome to test though.
 
 ## Initial setup
-Before even starting it, ensure you have QBitTorrent (specifically this torrent client) installed and ready.
+Before even starting it, ensure you have QBitTorrent (specifically this torrent client) installed and WebAPI in it enabled, as such:.
+![img.png](img.png)
+Exporter assumes you have either `admin`:`adminadmin` credentials or you have `Bypass authentication for clients on localhost` enabled, as on screenshot.
 
 1. Clone this repo via `git clone https://github.com/SanctusAnimus/Nhentai-Torrent-exporter.git`, or download-unzip directly
 2. In repo folder create `config.env`, and fill it as follows:
