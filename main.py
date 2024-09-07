@@ -38,7 +38,7 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=args.config)
 
     if args.command == "export":
-        export_fav_ids(args.open_window, args.skip_torrent)
+        export_fav_ids(args.skip_torrent)
     elif args.command == "download_indexed":
         download_from_index_file(args.index_file)
     else:

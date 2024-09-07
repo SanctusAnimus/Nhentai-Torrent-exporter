@@ -15,8 +15,8 @@ author_re = compile(r"(?<=\[)[^\[\]]*(?=\])")
 dir_name_re = compile(r'[^\w\-]')
 
 
-def export_fav_ids(open_window: bool = False, skip_torrent: bool = False):
-    logger.info(f"Initiating export, starting from page, {open_window=}")
+def export_fav_ids(skip_torrent: bool = False):
+    logger.info(f"Initiating export")
 
     if not is_process_running("qbittorrent"):
         raise SystemExit(f"Export requires QBittorrent to be running, please start QBittorrent first.")
