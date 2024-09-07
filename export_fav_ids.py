@@ -2,12 +2,11 @@ import math
 import os
 from re import compile, findall
 from time import sleep
+from urllib.parse import urljoin
 
+from bs4 import BeautifulSoup
 from loguru import logger
 from requests import get
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 import qbittorrentapi
 from pathvalidate import sanitize_filepath
 import psutil
@@ -22,35 +21,31 @@ def export_fav_ids(open_window: bool = False, skip_torrent: bool = False):
     if not is_process_running("qbittorrent"):
         raise SystemExit(f"Export requires QBittorrent to be running, please start QBittorrent first.")
 
-    if open_window:
-        logger.info(f"Requested automatic window, opening and waiting")
-        os.popen('chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\\selenum\\ChromeProfile"')
-        sleep(5)
-
-    chrome_options = Options()
-    chrome_options.debugger_address = "127.0.0.1:9222"
-
-    driver = webdriver.Chrome(options=chrome_options)
     ids = []
     id_file_content = []
     by_author = {}
 
-    logger.warning("SWITCH TO YOUR WINDOW!")
-    sleep(float(os.getenv("WINDOW_SWITCH_DELAY", "2")))
-
     index_delay = float(os.getenv("FAV_INDEX_DELAY", "2"))
     unknown_author_name = os.getenv("UNKNOWN_AUTHOR_NAME", "Unknown Author")
-    current_url = "https://nhentai.net/favorites/"
+    base_url = "https://nhentai.net"
+    current_url = f"{base_url}/favorites/"
+
+    cookies = create_auth_cookies()
 
     while True:
         logger.info(f"Fetching {current_url}")
-        driver.get(current_url)
+        fav_page_res = get(current_url, cookies=cookies, headers={"User-Agent": os.getenv("USER_AGENT")})
+        if fav_page_res.status_code != 200:
+            logger.error(f"Failed to fetch fav page at {current_url}: {fav_page_res.status_code} = {fav_page_res.text}")
+            return
 
-        fav_elements = driver.find_elements(By.CLASS_NAME, "gallery-favorite")
+        soup = BeautifulSoup(fav_page_res.text, 'html.parser')
+
+        fav_elements = soup.find_all(class_="gallery-favorite")
 
         for el in fav_elements:
-            data_id = el.get_attribute("data-id")
-            caption_text = el.find_element(By.CLASS_NAME, "caption").text
+            data_id = el["data-id"]
+            caption_text = el.find(class_="caption").get_text()
 
             found_authors = findall(author_re, caption_text)
             if len(found_authors) > 0:
@@ -71,17 +66,16 @@ def export_fav_ids(open_window: bool = False, skip_torrent: bool = False):
 
             logger.info(f"+ {data_id} {author} {caption_text}")
 
-        pagination_el = driver.find_element(By.CLASS_NAME, "pagination")
-        next_el = pagination_el.find_elements(By.CLASS_NAME, "next")
+        pagination_el = soup.find(class_="pagination")
+        next_el = pagination_el.find(class_="next")
 
-        if next_el is None or len(next_el) == 0:
+        if next_el is None:
             logger.info("Next pagination el is missing, reached the end of favorites")
             break
         else:
-            current_url = next_el[0].get_attribute('href')
+            current_url = urljoin(current_url, next_el["href"])
             logger.info(f"Switching nav to {current_url}")
-
-        sleep(index_delay)
+            sleep(index_delay)
 
     logger.info(f"Completed indexing favorites: {len(ids)} IDs, {len(by_author)} authors")
 
