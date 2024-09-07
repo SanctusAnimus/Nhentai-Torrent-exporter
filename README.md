@@ -31,15 +31,15 @@ Exporter assumes you have either `admin`:`adminadmin` credentials or you have `B
     (Chrome) ⋮ — More tools — Developer tools — Application — Storage — Cookies — https://nhentai.net  
     (Firefox) ☰ — Web Developer — Web Developer Tools — Storage — Cookies — https://nhentai.net  
 
-    > [!IMPORTANT]  
-    > `cf_clearance` is only set if you've passed captcha during your session - which might not be the case for you all the time.
-    > If you don't see it in the Storage, erase the line containing `CF_CLEARANCE` from config. 
-    > It being unset however might cause an error at some point, to which you'll need to switch back to your browser and reload the page to trigger captcha there, pass it and fetch clearance token in the same way described above
+> [!IMPORTANT]  
+> `cf_clearance` is only set if you've passed captcha during your session - which might not be the case for you all the time.
+> If you don't see it in the Storage, erase the line containing `CF_CLEARANCE` from config. 
+> It being unset however might cause an error at some point, to which you'll need to switch back to your browser and reload the page to trigger captcha there, pass it and fetch clearance token in the same way described above
 
-    To get user agent, navigate into `Network`, find the very first request, click, scroll down to `Request Headers`:  
+To get user agent, navigate into `Network`, find the very first request, click, scroll down to `Request Headers`:  
     ![img_1.png](img_1.png)
 
-    You can also find your cookies there.
+You can also find your cookies there.
 
 3. (Optional, but preferred) Create python virtual environment from CMD via
     ```
