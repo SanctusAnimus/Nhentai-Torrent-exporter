@@ -31,12 +31,13 @@ User Agent should be in the same tab as well. Please make sure to copy them prop
 
 3. (Optional, but preferred) Create python virtual environment from CMD via
 ```
-python -m venv venv
+python -m venv .venv
 ```
-And activate it with
+And activate it with this if you're running in terminal
 ```
-venv\Scripts\activate.bat
+.venv\Scripts\activate.bat
 ```
+In Powershell, use `.venv\Scripts\activate.ps1`
 4. Install dependencies via 
 ```pip install -r requirements.txt```
 You should be good to go.
